@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Practice | Career Launch</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="py-4 mb-4 bg-white shadow-sm">
+        <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+            <div>
+                <h1 class="h3 text-primary mb-1">Interview Practice</h1>
+                <p class="text-muted mb-0">Practice common interview questions and record your responses.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="dashboard.html" class="btn btn-outline-secondary">Dashboard</a>
+                <a href="index.html" class="btn btn-outline-secondary">Home</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mb-5">
+        <div class="row gx-4">
+            <div class="col-lg-7">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3">Question Practice</h2>
+                        <div class="mb-3">
+                            <p class="fs-5 fw-semibold" id="questionText"></p>
+                            <p class="text-muted mb-0" id="questionCount"></p>
+                        </div>
+                        <div class="mb-3">
+                            <label for="answerInput" class="form-label">Your answer</label>
+                            <textarea class="form-control" id="answerInput" rows="7" placeholder="Type your response here..."></textarea>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <button id="prevQuestion" class="btn btn-outline-primary">Previous</button>
+                            <button id="nextQuestion" class="btn btn-primary">Next</button>
+                            <button id="showTip" class="btn btn-outline-secondary">Show Tip</button>
+                        </div>
+                        <div class="alert alert-info d-none" id="tipBox"></div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3">Reflection</h2>
+                        <p class="text-muted">Write down what you would improve after answering each question.</p>
+                        <textarea class="form-control" id="reflectionInput" rows="4" placeholder="What will you change next time?"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3">Practice Tips</h2>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">Use the STAR method: Situation, Task, Action, Result.</li>
+                            <li class="mb-2">Keep answers concise and highlight measurable results.</li>
+                            <li class="mb-2">Practice speaking clearly and confidently.</li>
+                            <li class="mb-2">Write down improvements after each question.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3">Next steps</h2>
+                        <p class="mb-2">Move through questions one by one, then update your resume based on your strengths.</p>
+                        <p class="mb-0">Return to the dashboard for a quick career prep overview.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const interviewQuestions = [
+            {
+                text: 'Tell me about a time when you solved a difficult problem at work.',
+                tip: 'Focus on the challenge, the actions you took, and the result.'
+            },
+            {
+                text: 'How do you stay organized when managing multiple tasks?',
+                tip: 'Describe your tools, priorities, and how you keep projects on track.'
+            },
+            {
+                text: 'What is one professional achievement you are most proud of?',
+                tip: 'Choose a specific accomplishment and explain the impact.'
+            },
+            {
+                text: 'How do you handle feedback or criticism from a manager?',
+                tip: 'Show that you listen, adapt, and use feedback to improve.'
+            },
+            {
+                text: 'Why are you interested in this role or career path?',
+                tip: 'Connect your skills and goals to the opportunity clearly.'
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function renderQuestion() {
+            const questionText = document.getElementById('questionText');
+            const questionCount = document.getElementById('questionCount');
+            const tipBox = document.getElementById('tipBox');
+
+            const question = interviewQuestions[currentQuestionIndex];
+            questionText.textContent = question.text;
+            questionCount.textContent = `Question ${currentQuestionIndex + 1} of ${interviewQuestions.length}`;
+            tipBox.classList.add('d-none');
+            tipBox.textContent = '';
+        }
+
+        function showTip() {
+            const tipBox = document.getElementById('tipBox');
+            tipBox.textContent = interviewQuestions[currentQuestionIndex].tip;
+            tipBox.classList.remove('d-none');
+        }
+
+        function changeQuestion(direction) {
+            currentQuestionIndex += direction;
+            if (currentQuestionIndex < 0) {
+                currentQuestionIndex = 0;
+            }
+            if (currentQuestionIndex >= interviewQuestions.length) {
+                currentQuestionIndex = interviewQuestions.length - 1;
+            }
+            renderQuestion();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuestion();
+
+            document.getElementById('prevQuestion').addEventListener('click', () => changeQuestion(-1));
+            document.getElementById('nextQuestion').addEventListener('click', () => changeQuestion(1));
+            document.getElementById('showTip').addEventListener('click', showTip);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

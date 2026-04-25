@@ -6,58 +6,118 @@
     <title>Resume Builder</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header class="mb-4">
         <div class="container">
             <h1 class="text-primary text-center">Resume Builder</h1>
-            <p class="text-center text-muted">Build a professional resume preview instantly.</p>
+            <p class="text-center text-muted">Enter your details and generate a LaTeX-style resume preview.</p>
         </div>
     </header>
 
-    <main class="container mb-5" style="max-width: 1000px;">
+    <main class="container mb-5 resume-builder">
         <div class="row gx-4">
             <div class="col-lg-6">
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Resume Details</h2>
-                        <form id="resumeForm">
-                            <div class="mb-3">
-                                <label for="nameInput" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
+                        <h2 class="h5 mb-3">Resume Information</h2>
+                        <form id="resumeForm" novalidate>
+                            <h3 class="form-section-title">Header</h3>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="nameInput" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="nameInput" placeholder="Trinesh Kumar">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="titleInput" class="form-label">Professional Title</label>
+                                    <input type="text" class="form-control" id="titleInput" placeholder="Software Developer">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="locationInput" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="locationInput" placeholder="City, State">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="emailInput" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="emailInput" placeholder="name@email.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phoneInput" class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" id="phoneInput" placeholder="+91 98765 43210">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="linkedinInput" class="form-label">LinkedIn</label>
+                                    <input type="url" class="form-control" id="linkedinInput" placeholder="linkedin.com/in/username">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="githubInput" class="form-label">GitHub</label>
+                                    <input type="url" class="form-control" id="githubInput" placeholder="github.com/username">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="portfolioInput" class="form-label">Portfolio</label>
+                                    <input type="url" class="form-control" id="portfolioInput" placeholder="yourwebsite.com">
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="titleInput" class="form-label">Professional Title</label>
-                                <input type="text" class="form-control" id="titleInput" placeholder="e.g. Front-End Developer">
-                            </div>
-                            <div class="mb-3">
-                                <label for="emailInput" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="emailInput" placeholder="Enter your email">
-                            </div>
-                            <div class="mb-3">
-                                <label for="phoneInput" class="form-label">Phone</label>
-                                <input type="tel" class="form-control" id="phoneInput" placeholder="Enter your phone number">
-                            </div>
+
+                            <h3 class="form-section-title">Profile</h3>
                             <div class="mb-3">
                                 <label for="summaryInput" class="form-label">Professional Summary</label>
-                                <textarea class="form-control" id="summaryInput" rows="3" placeholder="Brief summary of your experience"></textarea>
+                                <textarea class="form-control" id="summaryInput" rows="3" placeholder="Briefly describe your background, strengths, and career focus."></textarea>
                             </div>
+
+                            <h3 class="form-section-title">Resume Sections</h3>
                             <div class="mb-3">
-                                <label for="skillsInput" class="form-label">Skills</label>
-                                <input type="text" class="form-control" id="skillsInput" placeholder="e.g. HTML, CSS, JavaScript">
-                                <div class="form-text">Separate skills with commas.</div>
+                                <label for="educationInput" class="form-label">Education</label>
+                                <textarea class="form-control" id="educationInput" rows="4" placeholder="Degree | School / University | Dates | CGPA or details"></textarea>
+                                <div class="form-text">
+                                    Format: <code>Degree | School / University | Dates | CGPA or details</code><br>
+                                    Example: <code>B.Tech Computer Science | ABC University | 2022 - 2026 | CGPA: 8.4</code>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="experienceInput" class="form-label">Experience</label>
-                                <textarea class="form-control" id="experienceInput" rows="3" placeholder="List key work experience or accomplishments"></textarea>
+                                <textarea class="form-control" id="experienceInput" rows="5" placeholder="Role | Company | Dates | Achievement one, Achievement two"></textarea>
+                                <div class="form-text">
+                                    Format: <code>Role | Company | Dates | Achievement one, Achievement two</code><br>
+                                    Example: <code>Frontend Developer Intern | ABC Tech | Jan 2025 - Mar 2025 | Built dashboard UI, Improved page speed</code>
+                                </div>
                             </div>
                             <div class="mb-3">
-                                <label for="educationInput" class="form-label">Education</label>
-                                <textarea class="form-control" id="educationInput" rows="2" placeholder="Highest education or certifications"></textarea>
+                                <label for="projectsInput" class="form-label">Projects</label>
+                                <textarea class="form-control" id="projectsInput" rows="5" placeholder="Project Name | Tech Stack | Built feature one, Improved result two"></textarea>
+                                <div class="form-text">
+                                    Format: <code>Project Name | Tech Stack | Built feature one, Improved result two</code><br>
+                                    Example: <code>Career Launch | HTML, CSS, JavaScript | Built resume preview, Added interview practice flow</code>
+                                </div>
                             </div>
+                            <div class="mb-3">
+                                <label for="skillsInput" class="form-label">Technical Skills</label>
+                                <textarea class="form-control" id="skillsInput" rows="3" placeholder="Java, Python, HTML, CSS, JavaScript, SQL"></textarea>
+                                <div class="form-text">
+                                    Format: <code>Skill one, Skill two, Skill three</code><br>
+                                    Example: <code>Java, Python, HTML, CSS, JavaScript, SQL</code>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="certificationsInput" class="form-label">Certifications</label>
+                                <textarea class="form-control" id="certificationsInput" rows="3" placeholder="Certification name - Provider"></textarea>
+                                <div class="form-text">
+                                    Format: <code>Certification name - Provider</code><br>
+                                    Example: <code>Java Programming - Coursera</code>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="achievementsInput" class="form-label">Achievements</label>
+                                <textarea class="form-control" id="achievementsInput" rows="3" placeholder="Won hackathon, Published project, Led team event"></textarea>
+                                <div class="form-text">
+                                    Format: <code>One achievement per line</code><br>
+                                    Example: <code>Won 2nd place in college hackathon</code>
+                                </div>
+                            </div>
+                            <textarea id="latexOutput" class="d-none" aria-hidden="true"></textarea>
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary">Generate Preview</button>
-                                <button type="button" id="copyButton" class="btn btn-outline-secondary">Copy Resume</button>
+                                <button type="button" class="btn btn-outline-secondary" id="downloadButton">Download Resume</button>
+                                <button type="button" class="btn btn-primary" id="generateButton">Generate Preview</button>
                             </div>
                         </form>
                     </div>
@@ -66,9 +126,9 @@
             <div class="col-lg-6">
                 <div class="card shadow-sm preview-card">
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Live Preview</h2>
+                        <h2 class="h5 mb-3">LaTeX Resume Preview</h2>
                         <div id="resumePreview" class="resume-preview text-muted">
-                            <p class="mb-0">Complete the form and click <strong>Generate Preview</strong> to see your resume here.</p>
+                            <p class="mb-0">Enter your details to generate the resume preview here.</p>
                         </div>
                     </div>
                 </div>

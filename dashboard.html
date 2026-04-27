@@ -19,6 +19,47 @@
     </header>
 
     <main class="container mb-5">
+        <section class="row g-4 mb-4">
+            <div class="col-md-6 col-xl-3">
+                <div class="card h-100 shadow-sm dashboard-score-card">
+                    <div class="card-body">
+                        <span class="dashboard-score-label">Readiness Score</span>
+                        <strong id="readinessScore">0%</strong>
+                        <div class="progress mt-3" role="progressbar" aria-label="Readiness score">
+                            <div class="progress-bar" id="readinessBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card h-100 shadow-sm dashboard-score-card">
+                    <div class="card-body">
+                        <span class="dashboard-score-label">Questions Answered</span>
+                        <strong id="answeredScore">0/12</strong>
+                        <small class="text-muted" id="answeredPercent">0% complete</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card h-100 shadow-sm dashboard-score-card">
+                    <div class="card-body">
+                        <span class="dashboard-score-label">Average Answer</span>
+                        <strong id="averageAnswerScore">0%</strong>
+                        <small class="text-muted">Based on saved responses</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card h-100 shadow-sm dashboard-score-card">
+                    <div class="card-body">
+                        <span class="dashboard-score-label">Practice Status</span>
+                        <strong id="practiceStatus">Start</strong>
+                        <small class="text-muted" id="practiceHint">Answer 3 questions today</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <div class="row g-4 mb-4">
             <div class="col-md-6 col-xl-4">
                 <div class="card h-100 shadow-sm">
@@ -53,13 +94,11 @@
             <div class="col-lg-8">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h2 class="h5">Career Launch Overview</h2>
-                        <p>Use the dashboard to keep all your job preparation tools in one place. Track your progress, jump to the resume builder, or practice common interview questions.</p>
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2"><strong>Resume Builder:</strong> Enter your details, generate a polished resume preview, and copy it directly.</li>
-                            <li class="mb-2"><strong>Interview Prep:</strong> Simulate interview questions and strengthen your responses with confidence.</li>
-                            <li><strong>Resources:</strong> Review best practices for presenting yourself professionally and preparing for applications.</li>
-                        </ul>
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
+                            <h2 class="h5 mb-0">Interview Score Breakdown</h2>
+                            <a href="interview.html" class="btn btn-sm btn-outline-primary">Improve Score</a>
+                        </div>
+                        <div class="dashboard-breakdown" id="categoryBreakdown"></div>
                     </div>
                 </div>
             </div>
@@ -79,6 +118,117 @@
         </section>
     </main>
 
+    <script>
+        const interviewQuestionCategories = {
+            "Behavioral:Tell me about yourself.": "Behavioral",
+            "Behavioral:Tell me about a time you solved a difficult problem.": "Behavioral",
+            "Behavioral:Describe a time you worked in a team.": "Behavioral",
+            "Technical:Explain a project from your resume that you are proud of.": "Technical",
+            "Technical:How do you debug a feature that is not working?": "Technical",
+            "Technical:What is the difference between frontend and backend development?": "Technical",
+            "HR:Why do you want this role?": "HR",
+            "HR:What are your strengths and weaknesses?": "HR",
+            "HR:Where do you see yourself in five years?": "HR",
+            "Situational:What would you do if you missed an important deadline?": "Situational",
+            "Situational:How would you handle unclear requirements from a manager or client?": "Situational",
+            "Situational:How do you handle feedback you disagree with?": "Situational"
+        };
+
+        const totalInterviewQuestions = Object.keys(interviewQuestionCategories).length;
+        const storageKey = "careerLaunchInterviewAnswers";
+
+        const getWords = (value) => {
+            return value.trim().split(/\s+/).filter(Boolean);
+        };
+
+        const getAnswerScore = (value) => {
+            const words = getWords(value);
+            const hasExample = /\b(project|time|when|built|created|improved|led|worked|solved)\b/i.test(value);
+            const hasResult = /\b(result|learned|improved|reduced|increased|achieved|delivered|completed)\b/i.test(value);
+            const isConcise = words.length > 0 && words.length <= 180;
+
+            return [
+                words.length >= 15,
+                hasExample,
+                hasResult,
+                isConcise
+            ].filter(Boolean).length * 25;
+        };
+
+        const getSavedResponses = () => {
+            try {
+                return JSON.parse(localStorage.getItem(storageKey) || "{}");
+            } catch (error) {
+                return {};
+            }
+        };
+
+        const getCategoryStats = (responses) => {
+            const stats = {
+                Behavioral: { answered: 0, total: 0, score: 0 },
+                Technical: { answered: 0, total: 0, score: 0 },
+                HR: { answered: 0, total: 0, score: 0 },
+                Situational: { answered: 0, total: 0, score: 0 }
+            };
+
+            Object.entries(interviewQuestionCategories).forEach(([id, category]) => {
+                const response = responses[id];
+                stats[category].total += 1;
+
+                if (response?.answer) {
+                    stats[category].answered += 1;
+                    stats[category].score += Number.isFinite(response.score)
+                        ? response.score
+                        : getAnswerScore(response.answer);
+                }
+            });
+
+            return stats;
+        };
+
+        const renderDashboardScores = () => {
+            const responses = getSavedResponses();
+            const answeredResponses = Object.entries(responses)
+                .filter(([id, response]) => interviewQuestionCategories[id] && response.answer);
+            const answeredCount = answeredResponses.length;
+            const progressScore = Math.round((answeredCount / totalInterviewQuestions) * 100);
+            const scoreTotal = answeredResponses.reduce((total, [, response]) => {
+                return total + (Number.isFinite(response.score) ? response.score : getAnswerScore(response.answer));
+            }, 0);
+            const averageScore = answeredCount ? Math.round(scoreTotal / answeredCount) : 0;
+            const readinessScore = Math.round((progressScore * 0.4) + (averageScore * 0.6));
+            const categoryStats = getCategoryStats(responses);
+
+            document.getElementById("readinessScore").textContent = `${readinessScore}%`;
+            document.getElementById("readinessBar").style.width = `${readinessScore}%`;
+            document.getElementById("answeredScore").textContent = `${answeredCount}/${totalInterviewQuestions}`;
+            document.getElementById("answeredPercent").textContent = `${progressScore}% complete`;
+            document.getElementById("averageAnswerScore").textContent = `${averageScore}%`;
+            document.getElementById("practiceStatus").textContent = answeredCount >= 3 ? "Active" : "Start";
+            document.getElementById("practiceHint").textContent = answeredCount >= 3
+                ? "Good pace. Keep refining answers."
+                : "Answer 3 questions today";
+
+            document.getElementById("categoryBreakdown").innerHTML = Object.entries(categoryStats).map(([category, stat]) => {
+                const average = stat.answered ? Math.round(stat.score / stat.answered) : 0;
+                const progress = Math.round((stat.answered / stat.total) * 100);
+
+                return `
+                    <div class="dashboard-breakdown-row">
+                        <div>
+                            <strong>${category}</strong>
+                            <small>${stat.answered}/${stat.total} answered | ${average}% avg</small>
+                        </div>
+                        <div class="progress" role="progressbar" aria-label="${category} completion">
+                            <div class="progress-bar" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        };
+
+        document.addEventListener("DOMContentLoaded", renderDashboardScores);
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

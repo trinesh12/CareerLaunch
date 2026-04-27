@@ -12,132 +12,371 @@
         <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
             <div>
                 <h1 class="h3 text-primary mb-1">Interview Practice</h1>
-                <p class="text-muted mb-0">Practice common interview questions and record your responses.</p>
+                <p class="text-muted mb-0">Answer realistic questions, save drafts, and sharpen each response.</p>
             </div>
             <div class="d-flex flex-wrap gap-2">
                 <a href="dashboard.html" class="btn btn-outline-secondary">Dashboard</a>
-                <a href="index.html" class="btn btn-outline-secondary">Home</a>
+                <a href="resume.html" class="btn btn-outline-primary">Resume Builder</a>
             </div>
         </div>
     </header>
 
-    <main class="container mb-5">
-        <div class="row gx-4">
-            <div class="col-lg-7">
+    <main class="container mb-5 interview-page">
+        <div class="row g-4">
+            <section class="col-xl-8">
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Question Practice</h2>
-                        <div class="mb-3">
-                            <p class="fs-5 fw-semibold" id="questionText"></p>
-                            <p class="text-muted mb-0" id="questionCount"></p>
+                        <div class="d-flex flex-column flex-md-row align-items-md-start justify-content-between gap-3 mb-3">
+                            <div>
+                                <p class="text-uppercase small fw-bold text-primary mb-1" id="questionCategory">Behavioral</p>
+                                <h2 class="h4 mb-2" id="questionText">Tell me about yourself.</h2>
+                                <p class="text-muted mb-0" id="questionCount">Question 1 of 12</p>
+                            </div>
+                            <select class="form-select interview-category-select" id="categoryFilter" aria-label="Filter interview category">
+                                <option value="all">All questions</option>
+                                <option value="Behavioral">Behavioral</option>
+                                <option value="Technical">Technical</option>
+                                <option value="HR">HR</option>
+                                <option value="Situational">Situational</option>
+                            </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="answerInput" class="form-label">Your answer</label>
-                            <textarea class="form-control" id="answerInput" rows="7" placeholder="Type your response here..."></textarea>
+
+                        <div class="interview-prompt mb-3">
+                            <strong>Answer focus:</strong>
+                            <span id="questionTip">Give a short story about your background, strengths, and career goal.</span>
                         </div>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <button id="prevQuestion" class="btn btn-outline-primary">Previous</button>
-                            <button id="nextQuestion" class="btn btn-primary">Next</button>
-                            <button id="showTip" class="btn btn-outline-secondary">Show Tip</button>
-                        </div>
-                        <div class="alert alert-info d-none" id="tipBox"></div>
+
+                        <form id="interviewForm">
+                            <div class="mb-3">
+                                <label for="answerInput" class="form-label">Your answer</label>
+                                <textarea class="form-control" id="answerInput" rows="9" placeholder="Type your answer here. Aim for a clear opening, one specific example, and a confident close."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notesInput" class="form-label">Improvement notes</label>
+                                <textarea class="form-control" id="notesInput" rows="3" placeholder="What should you improve next time?"></textarea>
+                            </div>
+                            <div class="d-flex flex-wrap align-items-center gap-2">
+                                <button type="button" class="btn btn-outline-primary" id="prevQuestion">Previous</button>
+                                <button type="button" class="btn btn-primary" id="nextQuestion">Next</button>
+                                <button type="submit" class="btn btn-success" id="saveAnswer">Save Answer</button>
+                                <button type="button" class="btn btn-outline-secondary" id="clearAnswer">Clear</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Reflection</h2>
-                        <p class="text-muted">Write down what you would improve after answering each question.</p>
-                        <textarea class="form-control" id="reflectionInput" rows="4" placeholder="What will you change next time?"></textarea>
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
+                            <h2 class="h5 mb-0">Question Bank</h2>
+                            <span class="badge text-bg-light" id="answeredBadge">0 answered</span>
+                        </div>
+                        <div class="list-group interview-question-list" id="questionList"></div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="col-lg-5">
+            <aside class="col-xl-4">
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Practice Tips</h2>
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2">Use the STAR method: Situation, Task, Action, Result.</li>
-                            <li class="mb-2">Keep answers concise and highlight measurable results.</li>
-                            <li class="mb-2">Practice speaking clearly and confidently.</li>
-                            <li class="mb-2">Write down improvements after each question.</li>
+                        <h2 class="h5 mb-3">Response Review</h2>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <div class="interview-stat">
+                                    <span id="wordCount">0</span>
+                                    <small>Words</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="interview-stat">
+                                    <span id="estimatedTime">0:00</span>
+                                    <small>Speaking time</small>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-unstyled interview-checklist mb-0" id="answerChecklist">
+                            <li>Opening is clear</li>
+                            <li>Specific example included</li>
+                            <li>Result or learning included</li>
+                            <li>Answer is concise</li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="card shadow-sm">
+                <div class="card shadow-sm mb-4">
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Next steps</h2>
-                        <p class="mb-2">Move through questions one by one, then update your resume based on your strengths.</p>
-                        <p class="mb-0">Return to the dashboard for a quick career prep overview.</p>
+                        <h2 class="h5 mb-3">Saved Answers</h2>
+                        <div id="savedAnswers" class="saved-answer-list text-muted">
+                            No answers saved yet.
+                        </div>
                     </div>
                 </div>
-            </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3">Practice Tips</h2>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2"><strong>STAR:</strong> Situation, Task, Action, Result.</li>
+                            <li class="mb-2"><strong>Keep it short:</strong> Most answers should land near 60 to 90 seconds.</li>
+                            <li class="mb-2"><strong>Be specific:</strong> Name the project, tool, metric, or outcome.</li>
+                            <li><strong>Close strongly:</strong> Connect the answer back to the role.</li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
         </div>
     </main>
 
     <script>
         const interviewQuestions = [
             {
-                text: 'Tell me about a time when you solved a difficult problem at work.',
-                tip: 'Focus on the challenge, the actions you took, and the result.'
+                category: "Behavioral",
+                text: "Tell me about yourself.",
+                tip: "Give a short story about your background, strengths, and career goal."
             },
             {
-                text: 'How do you stay organized when managing multiple tasks?',
-                tip: 'Describe your tools, priorities, and how you keep projects on track.'
+                category: "Behavioral",
+                text: "Tell me about a time you solved a difficult problem.",
+                tip: "Use STAR and spend most of the answer on your action and result."
             },
             {
-                text: 'What is one professional achievement you are most proud of?',
-                tip: 'Choose a specific accomplishment and explain the impact.'
+                category: "Behavioral",
+                text: "Describe a time you worked in a team.",
+                tip: "Show your role, how you communicated, and what the team achieved."
             },
             {
-                text: 'How do you handle feedback or criticism from a manager?',
-                tip: 'Show that you listen, adapt, and use feedback to improve.'
+                category: "Technical",
+                text: "Explain a project from your resume that you are proud of.",
+                tip: "Cover the problem, tech stack, your contribution, and measurable impact."
             },
             {
-                text: 'Why are you interested in this role or career path?',
-                tip: 'Connect your skills and goals to the opportunity clearly.'
+                category: "Technical",
+                text: "How do you debug a feature that is not working?",
+                tip: "Walk through reproduction, logs, isolation, fix, and testing."
+            },
+            {
+                category: "Technical",
+                text: "What is the difference between frontend and backend development?",
+                tip: "Answer simply, then mention how both communicate through APIs."
+            },
+            {
+                category: "HR",
+                text: "Why do you want this role?",
+                tip: "Connect the company or role to your skills, interests, and next career step."
+            },
+            {
+                category: "HR",
+                text: "What are your strengths and weaknesses?",
+                tip: "Give one real strength with proof and one weakness with an improvement plan."
+            },
+            {
+                category: "HR",
+                text: "Where do you see yourself in five years?",
+                tip: "Stay realistic and focus on growth, responsibility, and learning."
+            },
+            {
+                category: "Situational",
+                text: "What would you do if you missed an important deadline?",
+                tip: "Show accountability, communication, prioritization, and prevention."
+            },
+            {
+                category: "Situational",
+                text: "How would you handle unclear requirements from a manager or client?",
+                tip: "Mention clarifying questions, written confirmation, and early prototypes."
+            },
+            {
+                category: "Situational",
+                text: "How do you handle feedback you disagree with?",
+                tip: "Show listening, asking questions, testing the idea, and staying professional."
             }
         ];
 
+        const storageKey = "careerLaunchInterviewAnswers";
         let currentQuestionIndex = 0;
+        let activeQuestions = [...interviewQuestions];
+        let savedResponses = JSON.parse(localStorage.getItem(storageKey) || "{}");
 
-        function renderQuestion() {
-            const questionText = document.getElementById('questionText');
-            const questionCount = document.getElementById('questionCount');
-            const tipBox = document.getElementById('tipBox');
+        const questionCategory = document.getElementById("questionCategory");
+        const questionText = document.getElementById("questionText");
+        const questionCount = document.getElementById("questionCount");
+        const questionTip = document.getElementById("questionTip");
+        const answerInput = document.getElementById("answerInput");
+        const notesInput = document.getElementById("notesInput");
+        const questionList = document.getElementById("questionList");
+        const savedAnswers = document.getElementById("savedAnswers");
+        const answeredBadge = document.getElementById("answeredBadge");
+        const wordCount = document.getElementById("wordCount");
+        const estimatedTime = document.getElementById("estimatedTime");
+        const checklist = document.getElementById("answerChecklist");
 
-            const question = interviewQuestions[currentQuestionIndex];
+        const getQuestionId = (question) => `${question.category}:${question.text}`;
+
+        const escapeHtml = (value) => {
+            const div = document.createElement("div");
+            div.textContent = value;
+            return div.innerHTML;
+        };
+
+        const getWords = (value) => {
+            return value.trim().split(/\s+/).filter(Boolean);
+        };
+
+        const getAnswerScore = (value) => {
+            const words = getWords(value);
+            const hasExample = /\b(project|time|when|built|created|improved|led|worked|solved)\b/i.test(value);
+            const hasResult = /\b(result|learned|improved|reduced|increased|achieved|delivered|completed)\b/i.test(value);
+            const isConcise = words.length > 0 && words.length <= 180;
+
+            return [
+                words.length >= 15,
+                hasExample,
+                hasResult,
+                isConcise
+            ].filter(Boolean).length * 25;
+        };
+
+        const updateStats = () => {
+            const words = getWords(answerInput.value);
+            const seconds = Math.round((words.length / 130) * 60);
+            const minutes = Math.floor(seconds / 60);
+            const remainder = String(seconds % 60).padStart(2, "0");
+            const hasExample = /\b(project|time|when|built|created|improved|led|worked|solved)\b/i.test(answerInput.value);
+            const hasResult = /\b(result|learned|improved|reduced|increased|achieved|delivered|completed)\b/i.test(answerInput.value);
+
+            wordCount.textContent = words.length;
+            estimatedTime.textContent = `${minutes}:${remainder}`;
+
+            checklist.children[0].classList.toggle("complete", words.length >= 15);
+            checklist.children[1].classList.toggle("complete", hasExample);
+            checklist.children[2].classList.toggle("complete", hasResult);
+            checklist.children[3].classList.toggle("complete", words.length > 0 && words.length <= 180);
+        };
+
+        const renderQuestion = () => {
+            const question = activeQuestions[currentQuestionIndex];
+            const saved = savedResponses[getQuestionId(question)] || {};
+
+            questionCategory.textContent = question.category;
             questionText.textContent = question.text;
-            questionCount.textContent = `Question ${currentQuestionIndex + 1} of ${interviewQuestions.length}`;
-            tipBox.classList.add('d-none');
-            tipBox.textContent = '';
-        }
+            questionCount.textContent = `Question ${currentQuestionIndex + 1} of ${activeQuestions.length}`;
+            questionTip.textContent = question.tip;
+            answerInput.value = saved.answer || "";
+            notesInput.value = saved.notes || "";
 
-        function showTip() {
-            const tipBox = document.getElementById('tipBox');
-            tipBox.textContent = interviewQuestions[currentQuestionIndex].tip;
-            tipBox.classList.remove('d-none');
-        }
+            document.getElementById("prevQuestion").disabled = currentQuestionIndex === 0;
+            document.getElementById("nextQuestion").disabled = currentQuestionIndex === activeQuestions.length - 1;
 
-        function changeQuestion(direction) {
-            currentQuestionIndex += direction;
-            if (currentQuestionIndex < 0) {
+            updateStats();
+            renderQuestionList();
+        };
+
+        const renderQuestionList = () => {
+            questionList.innerHTML = activeQuestions.map((question, index) => {
+                const isActive = index === currentQuestionIndex;
+                const isAnswered = Boolean(savedResponses[getQuestionId(question)]?.answer);
+
+                return `
+                    <button type="button" class="list-group-item list-group-item-action ${isActive ? "active" : ""}" data-index="${index}">
+                        <span>${question.text}</span>
+                        <small>${question.category}${isAnswered ? " | Saved" : ""}</small>
+                    </button>
+                `;
+            }).join("");
+        };
+
+        const renderSavedAnswers = () => {
+            const entries = Object.entries(savedResponses).filter(([, response]) => response.answer);
+            answeredBadge.textContent = `${entries.length} answered`;
+
+            if (!entries.length) {
+                savedAnswers.classList.add("text-muted");
+                savedAnswers.innerHTML = "No answers saved yet.";
+                return;
+            }
+
+            savedAnswers.classList.remove("text-muted");
+            savedAnswers.innerHTML = entries.map(([id, response]) => {
+                const question = interviewQuestions.find((item) => getQuestionId(item) === id);
+                const questionText = question ? question.text : id;
+
+                return `
+                    <article class="saved-answer">
+                        <h3>${escapeHtml(questionText)}</h3>
+                        <p>${escapeHtml(response.answer)}</p>
+                        ${response.notes ? `<small>Note: ${escapeHtml(response.notes)}</small>` : ""}
+                    </article>
+                `;
+            }).join("");
+        };
+
+        const saveCurrentAnswer = () => {
+            const question = activeQuestions[currentQuestionIndex];
+            const id = getQuestionId(question);
+
+            savedResponses[id] = {
+                answer: answerInput.value.trim(),
+                notes: notesInput.value.trim(),
+                score: getAnswerScore(answerInput.value)
+            };
+
+            if (!savedResponses[id].answer && !savedResponses[id].notes) {
+                delete savedResponses[id];
+            }
+
+            localStorage.setItem(storageKey, JSON.stringify(savedResponses));
+            renderSavedAnswers();
+            renderQuestionList();
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderQuestion();
+            renderSavedAnswers();
+
+            document.getElementById("interviewForm").addEventListener("submit", (event) => {
+                event.preventDefault();
+                saveCurrentAnswer();
+            });
+
+            document.getElementById("prevQuestion").addEventListener("click", () => {
+                saveCurrentAnswer();
+                currentQuestionIndex = Math.max(0, currentQuestionIndex - 1);
+                renderQuestion();
+            });
+
+            document.getElementById("nextQuestion").addEventListener("click", () => {
+                saveCurrentAnswer();
+                currentQuestionIndex = Math.min(activeQuestions.length - 1, currentQuestionIndex + 1);
+                renderQuestion();
+            });
+
+            document.getElementById("clearAnswer").addEventListener("click", () => {
+                answerInput.value = "";
+                notesInput.value = "";
+                saveCurrentAnswer();
+                updateStats();
+            });
+
+            document.getElementById("categoryFilter").addEventListener("change", (event) => {
+                saveCurrentAnswer();
+                activeQuestions = event.target.value === "all"
+                    ? [...interviewQuestions]
+                    : interviewQuestions.filter((question) => question.category === event.target.value);
                 currentQuestionIndex = 0;
-            }
-            if (currentQuestionIndex >= interviewQuestions.length) {
-                currentQuestionIndex = interviewQuestions.length - 1;
-            }
-            renderQuestion();
-        }
+                renderQuestion();
+            });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderQuestion();
+            questionList.addEventListener("click", (event) => {
+                const item = event.target.closest("[data-index]");
+                if (!item) {
+                    return;
+                }
 
-            document.getElementById('prevQuestion').addEventListener('click', () => changeQuestion(-1));
-            document.getElementById('nextQuestion').addEventListener('click', () => changeQuestion(1));
-            document.getElementById('showTip').addEventListener('click', showTip);
+                saveCurrentAnswer();
+                currentQuestionIndex = Number(item.dataset.index);
+                renderQuestion();
+            });
+
+            answerInput.addEventListener("input", updateStats);
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const generateButton = document.getElementById("generateButton");
     const downloadButton = document.getElementById("downloadButton");
     const latexOutput = document.getElementById("latexOutput");
+    const submittedPreview = document.getElementById("submittedPreview");
 
     if (!form || !preview) {
         return;
@@ -295,6 +296,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (latexOutput) {
             latexOutput.value = latex;
+        }
+
+        if (submittedPreview) {
+            const firstProject = resume.projects[0]?.name || "Portfolio Website";
+            submittedPreview.innerHTML = `
+                <h3>Submitted Preview</h3>
+                <p><strong>Name:</strong> ${escapeHtml(resume.name || "Trinesh")}</p>
+                <p><strong>Skills:</strong> ${escapeHtml(resume.skills.join(", ") || "C++, Python")}</p>
+                <p><strong>Projects:</strong> ${escapeHtml(firstProject)}</p>
+            `;
         }
 
         return true;

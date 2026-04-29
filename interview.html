@@ -61,6 +61,10 @@
                                 <button type="submit" class="btn btn-success" id="saveAnswer">Save Answer</button>
                                 <button type="button" class="btn btn-outline-secondary" id="clearAnswer">Clear</button>
                             </div>
+                            <div class="ai-feedback mt-4" id="aiFeedback">
+                                <strong>AI Feedback:</strong>
+                                <span>Submit your answer to get feedback.</span>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -204,6 +208,7 @@
         const notesInput = document.getElementById("notesInput");
         const questionList = document.getElementById("questionList");
         const savedAnswers = document.getElementById("savedAnswers");
+        const aiFeedback = document.getElementById("aiFeedback");
         const answeredBadge = document.getElementById("answeredBadge");
         const wordCount = document.getElementById("wordCount");
         const estimatedTime = document.getElementById("estimatedTime");
@@ -324,6 +329,9 @@
             }
 
             localStorage.setItem(storageKey, JSON.stringify(savedResponses));
+            if (aiFeedback) {
+                aiFeedback.innerHTML = "<strong>AI Feedback:</strong> <span>Good answer, improve clarity and structure.</span>";
+            }
             renderSavedAnswers();
             renderQuestionList();
         };

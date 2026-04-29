@@ -12,7 +12,12 @@
         <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
             <div>
                 <h1 class="h3 text-primary mb-1">Career Launch Dashboard</h1>
-                <p class="text-muted mb-0">Quick access to your resume builder, interview prep, and progress overview.</p>
+                <p class="text-muted mb-1">AI-powered placement preparation platform</p>
+                <div class="feature-points">
+                    <span>Resume Builder</span>
+                    <span>Mock Interview</span>
+                    <span>Progress Tracking</span>
+                </div>
             </div>
             <a href="index.html" class="btn btn-outline-primary">Back to Home</a>
         </div>
@@ -34,18 +39,18 @@
             <div class="col-md-6 col-xl-3">
                 <div class="card h-100 shadow-sm dashboard-score-card">
                     <div class="card-body">
-                        <span class="dashboard-score-label">Questions Answered</span>
-                        <strong id="answeredScore">0/12</strong>
-                        <small class="text-muted" id="answeredPercent">0% complete</small>
+                        <span class="dashboard-score-label">Resume Score</span>
+                        <strong id="resumeStaticScore">70</strong>
+                        <small class="text-muted">ATS-ready demo score</small>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-xl-3">
                 <div class="card h-100 shadow-sm dashboard-score-card">
                     <div class="card-body">
-                        <span class="dashboard-score-label">Average Answer</span>
-                        <strong id="averageAnswerScore">0%</strong>
-                        <small class="text-muted">Based on saved responses</small>
+                        <span class="dashboard-score-label">Interview Score</span>
+                        <strong id="interviewStaticScore">60</strong>
+                        <small class="text-muted">AI mock interview score</small>
                     </div>
                 </div>
             </div>
@@ -201,9 +206,6 @@
 
             document.getElementById("readinessScore").textContent = `${readinessScore}%`;
             document.getElementById("readinessBar").style.width = `${readinessScore}%`;
-            document.getElementById("answeredScore").textContent = `${answeredCount}/${totalInterviewQuestions}`;
-            document.getElementById("answeredPercent").textContent = `${progressScore}% complete`;
-            document.getElementById("averageAnswerScore").textContent = `${averageScore}%`;
             document.getElementById("practiceStatus").textContent = answeredCount >= 3 ? "Active" : "Start";
             document.getElementById("practiceHint").textContent = answeredCount >= 3
                 ? "Good pace. Keep refining answers."
